@@ -1,18 +1,24 @@
+const PORT = process.env.PORT || 3001;
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const path = require("path");
-const { logger } = require("./middleware/logger");
-const errorHandler = require("./middleware/errorMiddleware");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const mongoose = require("mongoose");
+// files ---------------------------------------------------------------------------------------------------
+const { logger, logEvents } = require("./middleware/logger");
+const errorHandler = require("./middleware/errorMiddleware");
 const corsOptons = require("./config/corsOptions");
-const PORT = process.env.PORT || 3001;
+const connectDB = require("./config/dbConn");
 
+// ---------------------------------------------------------------------------------------------------------
+connectDB();
 // logger -> custom middelware for file logs
 app.use(logger);
 
 // CORS -> Cross Origing Request Service
-app.use(cors(corsOptons))
+app.use(cors(corsOptons));
 
 // built-in middelware for all the static files like img, css, favicon etc go here
 app.use(express.static(path.join(__dirname, "/public")));
@@ -40,6 +46,14 @@ app.all("*", (req, res) => {
 // Custom middleware for error logs
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-	console.log(`Server running on ${PORT}`);
+mongoose.connection.once("open", () => {
+	console.log("Connected to MongoDB");
+	app.listen(PORT, () => {
+		console.log(`Server running on ${PORT}`);
+	});
+});
+
+mongoose.connection.on("error", (err) => {
+	console.log(err);
+	logEvents(`${err.no}: ${err.code}\t${err.syscall}]\t${err.hostname}`, "monogErrLog.log");
 });
