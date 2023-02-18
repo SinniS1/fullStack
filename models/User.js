@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
         default: "Employee"
     }],
     active: {
-        type: Booleam,
+        type: Boolean,
         default: true
     }
 })
