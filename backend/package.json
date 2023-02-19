@@ -1,5 +1,5 @@
 {
-	"name": "fullstack",
+	"name": "backend",
 	"version": "1.0.0",
 	"description": "1. creating basic server",
 	"main": "server.js",
@@ -11,7 +11,7 @@
 		"type": "git",
 		"url": "git+https://github.com/SinniS1/fullStack.git"
 	},
-	"author": "",
+	"author": "SinniS",
 	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/SinniS1/fullStack/issues"
